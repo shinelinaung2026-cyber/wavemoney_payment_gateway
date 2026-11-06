@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reaction Bot Maker UI Clone - Complete Master Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #161618;
+            --text-main: #ffffff;
+            --text-muted: #7d7d82;
+            --blue-accent: #007aff;
+            --blue-glow: rgba(0, 122, 255, 0.15);
+            --card-blue-border: rgba(0, 122, 255, 0.35);
+            --green: #34c759;
+            --red: #ff3b30;
+            --purple: #af52de;
+            --orange-gradient: linear-gradient(90deg, #d62828 0%, #f77f00 40%, #161618 45%);
+            --border-color: #2c2c2e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #121214;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 860px;
+            background-color: var(--bg-color);
+            position: relative;
+            padding-bottom: 95px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            border: 4px solid #2c2c2e;
+        }
+
+        /* Top Navigation Header Bar */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-color);
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .header-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Running Ticker Alerts */
+        .announcements-bar {
+            background: var(--orange-gradient);
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+            overflow: hidden;
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .announcements-tag {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .announcements-text {
+            display: inline-block;
+            animation: marquee 22s linear infinite;
+            font-weight: 400;
+            color: #e0e0e0;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(15%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Structural Page Views mapping */
+        .view-content {
+            padding: 24px 20px;
+            display: none;
+        }
+
+        .view-content.active {
+            display: block;
+        }
+
+        h2.section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        /* Dashboard Metric Cards & Layout Grids */
+        .stats-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card-full { width: 100%; margin-bottom: 12px; }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: 14px;
+            padding: 18px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .color-blue { color: var(--blue-accent); }
+        .color-green { color: var(--green); }
+        .color-red { color: var(--red); }
+
+        /* UI Select Control Tabs */
+        .segmented-control {
+            display: flex;
+            background-color: #0b0b0c;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .segment-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .segment-btn.active {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+        }
+
+        /* Custom Inputs Fields */
+        .search-wrapper { position: relative; margin-bottom: 16px; }
+        .search-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; }
+        
+        .search-input {
+            width: 100%;
+            background-color: var(--card-bg);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 14px 14px 14px 44px;
+            color: var(--text-main);
+            font-size: 15px;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .filter-select-box {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-main);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Bot Cards Layout Row Setup */
+        .bot-list { display: flex; flex-direction: column; gap: 10px; }
+        .bot-item {
+            background-color: var(--card-bg);
+            border-radius: 14px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .bot-item-left { display: flex; align-items: center; gap: 14px; }
+        .bot-index {
+            width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px;
+        }
+        .bot-title { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+        .bot-meta { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-muted); }
+        .status-badge {
+            background-color: rgba(52, 199, 89, 0.2); color: var(--green);
+            padding: 3px 8px; border-radius: 20px; font-weight: bold; display: flex; align-items: center; gap: 4px;
+        }
+        .btn-manage {
+            background-color: var(--blue-accent); color: white; border: none;
+            padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; gap: 6px; cursor: pointer;
+        }
+
+        /* Creator Leaderboards Style */
+        .leaderboard-list { display: flex; flex-direction: column; gap: 10px; }
+        .leaderboard-item {
+            background: linear-gradient(90deg, #1d1a0a 0%, var(--card-bg) 60%);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .bot-profile-info { display: flex; align-items: center; gap: 12px; }
+        .avatar-mock {
+            width: 42px; height: 42px; border-radius: 50%;
+            background-image: linear-gradient(135deg, #f59e0b, #9a3412);
+            border: 2px solid #ffd700;
+        }
+        .action-view-btn {
+            background-color: #2c2c2e; color: white; border: none;
+            padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;
+        }
+
+        /* Notifications Update Tab Elements */
+        .notifications-list { display: flex; flex-direction: column; gap: 12px; }
+        .notification-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-blue-border);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            gap: 16px;
+            cursor: pointer;
+        }
+        .noti-badge-circle {
+            width: 42px; height: 42px; border-radius: 50%;
+            background-color: var(--blue-accent);
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;
+        }
+        .notification-content { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
+        .notification-title { font-size: 16px; font-weight: 600; color: var(--text-main); line-height: 1.3; }
+        .notification-snippet { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+        .notification-time { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+
+        /* Create View Form Instructions Styling */
+        .form-group { background-color: var(--card-bg); border-radius: 16px; padding: 18px; margin-bottom: 15px; }
+        .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+        .form-input { width: 100%; background-color: #222224; border: 1px solid #2c2c2e; border-radius: 10px; padding: 14px; color: var(--text-main); font-size: 14px; margin-bottom: 15px; }
+        .btn-primary-action { width: 100%; background-color: var(--blue-accent); color: white; border: none; padding: 15px; border-radius: 25px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
+        
+        .instructions-card { background-color: var(--card-bg); border-radius: 16px; padding: 18px; margin-top: 15px; }
+        .instructions-card h3 { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; }
+        .instructions-list { list-style: none; font-size: 13px; color: #b0b0b5; line-height: 1.8; }
+        .instructions-list span.highlight { color: #4facfe; }
+        .instructions-list span.badge-inline { background-color: #22252a; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+        
+        
+         .btn-gradient-border { 
+            width: 100%;
+            background: transparent; 
+            color: #00f2fe;
+            border: 2px solid #00f2fe;
+            border-radius: 40px;
+            padding: 12px; 
+            font-size: 14px;
+            font-weight: 600; 
+            margin-top: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; 
+        }
+
+            
+        
+        .video-card { position: relative; border-radius: 12px; overflow: hidden; width: 100%; aspect-ratio: 16 / 9; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop') no-repeat center center; background-size: cover; display: flex; flex-direction: column; justify-content: space-between; padding: 15px; }
+        .video-overlay-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ff0000; font-size: 48px; }
+
+        /* Management Shell Blocks Layout */
+        .profile-section { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+        .avatar-large { width: 64px; height: 64px; border-radius: 50%; background-image: linear-gradient(135deg, #007aff, #af52de); }
+        .profile-name { font-size: 22px; font-weight: 700; }
+        .profile-username { color: var(--blue-accent); font-size: 14px; margin-top: 2px; }
+        .active-pill { background-color: var(--green); color: black; font-size: 12px; font-weight: bold; padding: 2px 8px; border-radius: 12px; margin-left: 8px; display: inline-block; }
+        
+        .panel-header { font-size: 12px; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase; display: flex; align-items: center; gap: 6px;}
+        .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 15px;}
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: var(--text-muted); }
+        .info-value { font-weight: 600; }
+
+        .btn-action-large { width: 100%; border: none; padding: 15px; border-radius: 16px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-bottom: 12px; }
+        .btn-red { background-color: var(--red); color: white; }
+        .btn-purple { background-color: var(--purple); color: white; }
+        .btn-secondary-blue { background-color: var(--blue-accent); color: white; }
+        .token-box { background-color: #222224; border-radius: 10px; padding: 12px; display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+
+        /* Emoji Target Component Blocks */
+        .emoji-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 15px; }
+        .emoji-item { background-color: var(--card-bg); border-radius: 10px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; border: 2px solid transparent; transition: all 0.15s ease; }
+        .emoji-item.selected { border-color: var(--blue-accent); background-color: rgba(0, 122, 255, 0.1); }
+        .no-data-msg { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 15px; }
+
+        /* Persistent Navigation Tray */
+        .bottom-nav {
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%;
+            background-color: rgba(22, 22, 24, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px; display: flex; justify-content: space-around; padding: 10px; border: 1px solid rgba(255, 255, 255, 0.05); z-index: 1000;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); text-decoration: none; font-size: 11px; font-weight: 500; cursor: pointer; position: relative; padding: 8px 14px; border-radius: 20px; }
+        .nav-item i { font-size: 18px; }
+        .nav-item.active { color: var(--blue-accent); background-color: var(--blue-glow); font-weight: 600; }
+        .nav-badge { position: absolute; top: 2px; right: 8px; background-color: var(--red); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <div class="header">
+        <div class="header-left" id="header-back-btn" onclick="goBack()">
+            <i class="fa-solid fa-xmark" id="header-icon"></i>
+            <div class="header-title-wrapper">
+                <h1 id="header-title">Reaction Bot Maker</h1>
+                <i class="fa-solid fa-chevron-down" id="header-dropdown-arrow" style="font-size: 12px;"></i>
+            </div>
+        </div>
+        <i class="fa-solid fa-ellipsis-vertical" style="cursor: pointer;"></i>
+    </div>
+
+    <div class="announcements-bar">
+        <div class="announcements-tag"><i class="fa-solid fa-bullhorn"></i> ANNOUNCEMENTS</div>
+        <div class="announcements-text">
+            BotMakerBot and our other bots may be affected due to a network/DNS routing issue. Please stay tuned! Premium services operational.
+        </div>
+    </div>
+
+    <div id="view-create" class="view-content">
+        <h2 class="section-title">Create Bot</h2>
+
+        <div class="form-group">
+            <label class="form-label">Enter Your Bot Token</label>
+            <input type="text" class="form-input" placeholder="1234567890:ABC-DEF...">
+            <button class="btn-primary-action"><i class="fa-solid fa-robot"></i> Create Bot</button>
+        </div>
+
+        <div class="stats-grid-2">
+            <div class="stat-card" style="padding: 12px; flex-direction: row; gap: 8px; cursor: pointer;">
+                <i class="fa-solid fa-circle-question" style="color:var(--blue-accent)"></i> Help
+            </div>
+            <div class="stat-card" style="padding: 12px; flex-direction: row; gap: 8px; cursor: pointer;">
+                <i class="fa-solid fa-headset" style="color:var(--green)"></i> Support
+            </div>
+        </div>
+
+        <div class="instructions-card">
+            <h3>How to get a Bot Token:</h3>
+            <ol class="instructions-list" style="padding-left: 15px; list-style-type: decimal;">
+                <li>First create bot from <span class="highlight">@BotFather</span></li>
+                <li>Send <span class="badge-inline" style="color: #00f2fe;">/newbot</span> to <span class="highlight">@BotFather</span></li>
+                <li>Type your bot name</li>
+                <li>Then type your bot username (must end with _bot)</li>
+                <li>You'll get your bot token - copy it</li>
+                <li>Paste the token above and click <span class="badge-inline" style="background-color: var(--blue-accent); color: white;">Create Bot</span></li>
+                <li>Make the bot admin in your channel/group to get reactions</li>
+            </ol>
+
+            <button class="btn-gradient-border"><i class="fa-solid fa-book-open"></i> Read Detailed Instructions</button>
+            <button class="btn-gradient-border" style="color: #34c759;"><i class="fa-solid fa-shield-halved"></i> Read Terms Of Use</button>
+            
+            <div class="video-preview-container" style="margin-top: 20px;">
+                <h3 style="margin-bottom: 8px;">Watch Full Tutorial:</h3>
+                <div class="video-card">
+                    <div style="font-weight: bold; text-shadow: 1px 1px 3px black; font-size: 14px;">How to Create Unlimited Auto Reactions</div>
+                    <i class="fa-solid fa-circle-play video-overlay-play"></i>
+                    <div style="font-size: 11px; color: #ccc; text-shadow: 1px 1px 3px black;">JS Organization • YouTube</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-all-bots" class="view-content">
+        <h2 class="section-title">Global Stats</h2>
+
+        <div class="segmented-control">
+            <button class="segment-btn active"><i class="fa-solid fa-chart-pie"></i> Overview</button>
+            <button class="segment-btn"><i class="fa-solid fa-chart-line"></i> Trend</button>
+        </div>
+
+        <div class="stats-grid-2">
+            <div class="stat-card">
+                <span class="stat-value color-blue"><i class="fa-solid fa-robot"></i> 14,808</span>
+                <span class="stat-label">Total Bots</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value color-blue"><i class="fa-solid fa-users"></i> 1,029</span>
+                <span class="stat-label">Creators</span>
+            </div>
+        </div>
+
+        <div class="stats-grid-2">
+            <div class="stat-card">
+                <span class="stat-value color-green"><i class="fa-solid fa-circle-check"></i> 3,984</span>
+                <span class="stat-label">Working</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value color-red"><i class="fa-solid fa-circle-xmark"></i> 40</span>
+                <span class="stat-label">Stopped</span>
+            </div>
+        </div>
+
+        <div class="stats-grid-2" style="margin-bottom: 25px;">
+            <div class="stat-card">
+                <span class="stat-value color-blue"><i class="fa-solid fa-user-clock"></i> 959</span>
+                <span class="stat-label">Daily Users</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value color-blue"><i class="fa-solid fa-terminal"></i> 4,426,877</span>
+                <span class="stat-label">24h Cmds</span>
+            </div>
+        </div>
+
+        <h2 class="section-title">Leaderboards</h2>
+        
+        <div class="segmented-control" style="margin-bottom: 12px;">
+            <button class="segment-btn active"><i class="fa-solid fa-trophy"></i> Bots</button>
+            <button class="segment-btn"><i class="fa-solid fa-medal"></i> Creators</button>
+        </div>
+
+        <div class="leaderboard-list">
+            <div class="leaderboard-item">
+                <div class="bot-profile-info">
+                    <div class="avatar-mock"></div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 14px;">Apple R🔲... <span style="color: #ffd700;">👑 #1</span></div>
+                        <div style="font-size: 11px; color: var(--text-muted);">Active and running metrics</div>
+                    </div>
+                </div>
+                <button class="action-view-btn">View <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-my-bots" class="view-content active">
+        <h2 class="section-title">My Area</h2>
+        
+        <div class="stats-grid-2">
+            <div class="stat-card">
+                <span class="stat-value color-blue"><i class="fa-solid fa-robot"></i> 17</span>
+                <span class="stat-label">Total Bots</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value color-green"><i class="fa-solid fa-circle-check"></i> 17</span>
+                <span class="stat-label">Working</span>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-card-full">
+            <span class="stat-value color-red"><i class="fa-solid fa-circle-xmark"></i> 0</span>
+            <span class="stat-label">Stopped</span>
+        </div>
+
+        <div class="segmented-control">
+            <button class="segment-btn active"><i class="fa-solid fa-robot"></i> My Bots</button>
+            <button class="segment-btn"><i class="fa-solid fa-user"></i> Profile</button>
+        </div>
+
+        <div class="search-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" class="search-input" placeholder="Search my bots...">
+        </div>
+
+        <div class="filter-row">
+            <div class="filter-select-box"><span>All Status</span><i class="fa-solid fa-chevron-down" style="font-size: 12px; color: var(--text-muted)"></i></div>
+            <div class="filter-select-box"><span>Sort: Default</span><i class="fa-solid fa-chevron-down" style="font-size: 12px; color: var(--text-muted)"></i></div>
+        </div>
+
+        <div class="bot-list">
+            <div class="bot-item">
+                <div class="bot-item-left">
+                    <div class="bot-index">1</div>
+                    <div>
+                        <div class="bot-title">Shine test bot 19</div>
+                        <div class="bot-meta">
+                            <span class="status-badge"><i class="fa-solid fa-circle-check"></i> working</span>
+                            <span><i class="fa-regular fa-thumbs-up"></i> 0</span>
+                            <span><i class="fa-regular fa-thumbs-down"></i> 0</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-manage" onclick="openManageBot('Shine test bot 19', '@shinereact19_bot')"><i class="fa-solid fa-gear"></i> Manage</button>
+            </div>
+
+            <div class="bot-item">
+                <div class="bot-item-left">
+                    <div class="bot-index">2</div>
+                    <div>
+                        <div class="bot-title">Shine test bot 12</div>
+                        <div class="bot-meta">
+                            <span class="status-badge"><i class="fa-solid fa-circle-check"></i> working</span>
+                            <span><i class="fa-regular fa-thumbs-up"></i> 0</span>
+                            <span><i class="fa-regular fa-thumbs-down"></i> 0</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-manage" onclick="openManageBot('Shine test bot 12', '@shinereact12_bot')"><i class="fa-solid fa-gear"></i> Manage</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-updates" class="view-content">
+        <h2 class="section-title">Notifications</h2>
+
+        <div class="search-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="noti-search-field" class="search-input" placeholder="Search notifications..." oninput="searchNotificationsData()">
+        </div>
+
+        <div class="filter-row">
+            <div class="filter-select-box"><span>All Status</span><i class="fa-solid fa-chevron-down" style="font-size: 12px; color: var(--text-muted)"></i></div>
+            <div class="filter-select-box"><span>All Types</span><i class="fa-solid fa-chevron-down" style="font-size: 12px; color: var(--text-muted)"></i></div>
+        </div>
+
+        <div class="notifications-list" id="noti-list-container">
+            <div class="notification-card" data-summary="Server Issue Affecting Some Bot Services">
+                <div class="notification-icon-wrapper"><div class="noti-badge-circle"><i class="fa-solid fa-bullhorn"></i></div></div>
+                <div class="notification-content">
+                    <div class="notification-title">Server Issue Affecting Some Bot Services</div>
+                    <div class="notification-snippet">Due to a network/DNS routing issue from ...</div>
+                    <div class="notification-time">2w ago</div>
+                </div>
+            </div>
+
+            <div class="notification-card" data-summary="Major Update">
+                <div class="notification-icon-wrapper"><div class="noti-badge-circle"><i class="fa-solid fa-bullhorn"></i></div></div>
+                <div class="notification-content">
+                    <div class="notification-title">Major Update</div>
+                    <div class="notification-snippet">🚀 Update: Reaction Bot Maker We're...</div>
+                    <div class="notification-time">2mo ago</div>
+                </div>
+            </div>
+
+            <div class="notification-card" data-summary="Massive Database Cleanup & Global Version Rollout">
+                <div class="notification-icon-wrapper"><div class="noti-badge-circle"><i class="fa-solid fa-bullhorn"></i></div></div>
+                <div class="notification-content">
+                    <div class="notification-title">Massive Database Cleanup & Version Rollout</div>
+                    <div class="notification-snippet">Dear Users, To ensure our platform runs...</div>
+                    <div class="notification-time">3mo ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-manage-overview" class="view-content">
+        <div class="profile-section">
+            <div class="avatar-large"></div>
+            <div>
+                <div class="profile-name"><span id="manage-bot-name">Shine test bot 19</span> <span class="active-pill">Active</span></div>
+                <div class="profile-username" id="manage-bot-username">@shinereact19_bot</div>
+            </div>
+        </div>
+
+        <div class="segmented-control">
+            <button class="segment-btn active"><i class="fa-solid fa-circle-info"></i> Overview</button>
+            <button class="segment-btn"><i class="fa-solid fa-chart-simple"></i> Analytics</button>
+            <button class="segment-btn"><i class="fa-solid fa-bullhorn"></i> Broadcasts</button>
+        </div>
+
+        <div class="form-group" style="border: 1px solid rgba(255,255,255,0.05);">
+            <div class="panel-header"><i class="fa-solid fa-bolt" style="color:var(--green)"></i> Bot Status</div>
+            <div style="color: var(--green); font-weight: bold; font-size: 16px; margin-bottom: 4px;">Bot is currently online</div>
+            <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">The bot is running and responding to commands.</div>
+            
+            <div style="display: flex; justify-content: space-between; text-align: center; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                <div>
+                    <div style="color: var(--green); margin-bottom: 4px;"><i class="fa-regular fa-clock"></i></div>
+                    <div style="font-size: 13px; font-weight: bold;">May 27 at 2:22 AM</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">Last Active</div>
+                </div>
+                <div>
+                    <div style="color: var(--blue-accent); margin-bottom: 4px;"><i class="fa-solid fa-signal"></i></div>
+                    <div style="font-size: 13px; font-weight: bold;">28ms</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">Ping</div>
+                </div>
+                <div>
+                    <div style="color: var(--purple); margin-bottom: 4px;"><i class="fa-solid fa-code-branch"></i></div>
+                    <div style="font-size: 13px; font-weight: bold;">v2.5.2</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">Version</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-action-large btn-red"><i class="fa-solid fa-circle-stop"></i> Stop Bot</button>
+
+        <div class="form-group">
+            <div class="panel-header"><i class="fa-solid fa-robot"></i> Bot Information</div>
+            <div class="info-row"><span class="info-label">Bot ID</span><span class="info-value">58392574</span></div>
+            <div class="info-row"><span class="info-label">Uptime</span><span class="info-value">241d 8h 14m 02s</span></div>
+            <div class="info-row"><span class="info-label">Members</span><span class="info-value">42</span></div>
+            
+            <button class="btn-action-large" style="background-color:#2c2c2e; color:var(--text-muted); margin-top:15px; font-size:14px; height:45px; border-radius:10px;">
+                <i class="fa-solid fa-circle-check" style="color: var(--green);"></i> You're Using Latest Version
+            </button>
+            <button class="btn-action-large btn-purple" onclick="openCustomizeEmoji()"><i class="fa-regular fa-face-smile"></i> Customize Reaction Emoji</button>
+            <button class="btn-action-large btn-secondary-blue"><i class="fa-solid fa-sliders"></i> Bot Settings</button>
+        </div>
+
+        <div class="form-group">
+            <div class="panel-header">Bot Token</div>
+            <div class="token-box">
+                <span style="color: var(--text-muted); letter-spacing: 2px;">••••••••••••••••••••••••••••</span>
+                <div style="display:flex; gap:14px; color:var(--text-muted); cursor:pointer;">
+                    <i class="fa-regular fa-copy"></i>
+                    <i class="fa-regular fa-eye"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-customize-emoji" class="view-content">
+        <div class="segmented-control" style="margin-bottom: 20px;">
+            <button class="segment-btn active" id="emoji-channel-tab" onclick="toggleEmojiTab('channel')"><i class="fa-solid fa-bullhorn"></i> Channel</button>
+            <button class="segment-btn" id="emoji-group-tab" onclick="toggleEmojiTab('group')"><i class="fa-solid fa-users"></i> Group</button>
+        </div>
+
+        <div class="form-group" style="background-color: #111112; border: 1px solid var(--border-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span id="emoji-container-title" style="font-weight: 700; font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Channel Reactions</span>
+                <span style="color: var(--blue-accent); font-size: 14px; font-weight: 600; cursor: pointer;" onclick="toggleAllEmojis()">Toggle All</span>
+            </div>
+            <p id="emoji-container-desc" style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Select emojis to be used in channels (Min 1).</p>
+            
+            <div class="emoji-grid" id="emoji-matrix-container">
+                </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav" id="app-bottom-navbar">
+        <div class="nav-item" id="nav-create" onclick="switchView('view-create', this)">
+            <i class="fa-solid fa-plus-circle"></i><span>Create</span>
+        </div>
+        <div class="nav-item" id="nav-all" onclick="switchView('view-all-bots', this)">
+            <i class="fa-solid fa-globe"></i><span>All Bots</span>
+        </div>
+        <div class="nav-item active" id="nav-my" onclick="switchView('view-my-bots', this)">
+            <i class="fa-solid fa-user-astronaut"></i><span>My Bots</span>
+        </div>
+        <div class="nav-item" id="nav-updates" onclick="switchView('view-updates', this)">
+            <i class="fa-solid fa-bell"></i><span>Updates</span><div class="nav-badge">14</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let currentActiveView = 'view-my-bots';
+    const emojisList = [
+        '👍','👎','❤️','🔥','🥰','👏','😁','🤔','🤯','😱','🤬','😢',
+        '🎉','🤩','🤮','💩','🙏','👌','🕊️','🤡','🥱','🥴','😍','🐳',
+        '❤️‍🔥','🌚','🌭','💯','🤣','⚡️','🍌','🏆','💔','🤨','😐','🍓',
+        '🍾','💋','🖕','😈','😴','😭','🤓','ghost','💻','👀','🎃','🙈',
+        '😇','😰','🤝','✍️','🤗','🫡','🎅','🎄','☃️','💅','🤪','🗿',
+        '🆒','💘','🙉','🦄','😘','💊'
+    ];
+
+    // Seed Custom Picker Layout Grid
+    const matrix = document.getElementById('emoji-matrix-container');
+    emojisList.forEach((emo, index) => {
+        const div = document.createElement('div');
+        div.className = 'emoji-item';
+        if([0, 2, 3, 4, 6, 12, 22, 28, 58].includes(index)) div.classList.add('selected');
+        div.innerText = emo === 'ghost' ? '👻' : emo;
+        div.onclick = () => div.classList.toggle('selected');
+        matrix.appendChild(div);
+    });
+
+    function switchView(viewId, element) {
+        document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        
+        document.getElementById(viewId).classList.add('active');
+        if(element) element.classList.add('active');
+        currentActiveView = viewId;
+
+        if(['view-create','view-all-bots','view-my-bots','view-updates'].includes(viewId)) {
+            document.getElementById('header-icon').className = "fa-solid fa-xmark";
+            document.getElementById('header-title').innerText = "Reaction Bot Maker";
+            document.getElementById('header-dropdown-arrow').style.display = "inline-block";
+            document.getElementById('app-bottom-navbar').style.display = "flex";
+        }
+    }
+
+    function openManageBot(name, username) {
+        document.getElementById('manage-bot-name').innerText = name;
+        document.getElementById('manage-bot-username').innerText = username;
+        
+        document.getElementById('header-icon').className = "fa-solid fa-arrow-left";
+        document.getElementById('header-title').innerText = "Reaction Bot Maker";
+        document.getElementById('header-dropdown-arrow').style.display = "inline-block";
+        document.getElementById('app-bottom-navbar').style.display = "none";
+
+        switchView('view-manage-overview', null);
+    }
+
+    function openCustomizeEmoji() {
+        document.getElementById('header-icon').className = "fa-solid fa-arrow-left";
+        document.getElementById('header-title').innerText = "Reaction Bot Maker";
+        document.getElementById('header-dropdown-arrow').style.display = "inline-block";
+        toggleEmojiTab('channel'); 
+        switchView('view-customize-emoji', null);
+    }
+
+    function toggleEmojiTab(type) {
+        const title = document.getElementById('emoji-container-title');
+        const desc = document.getElementById('emoji-container-desc');
+        const channelTab = document.getElementById('emoji-channel-tab');
+        const groupTab = document.getElementById('emoji-group-tab');
+
+        if(type === 'channel') {
+            channelTab.classList.add('active');
+            groupTab.classList.remove('active');
+            title.innerText = "Channel Reactions";
+            desc.innerText = "Select emojis to be used in channels (Min 1).";
+        } else {
+            groupTab.classList.add('active');
+            channelTab.classList.remove('active');
+            title.innerText = "Group Reactions";
+            desc.innerText = "Select emojis to be used in groups (Min 1).";
+        }
+    }
+
+    function toggleAllEmojis() {
+        const items = document.querySelectorAll('.emoji-item');
+        const selectedCount = document.querySelectorAll('.emoji-item.selected').length;
+        items.forEach(item => {
+            if (selectedCount > 25) item.classList.remove('selected');
+            else item.classList.add('selected');
+        });
+    }
+
+    function searchNotificationsData() {
+        const query = document.getElementById('noti-search-field').value.toLowerCase();
+        document.querySelectorAll('#noti-list-container .notification-card').forEach(card => {
+            const txt = card.getAttribute('data-summary').toLowerCase();
+            card.style.display = txt.includes(query) ? 'flex' : 'none';
+        });
+    }
+
+    function goBack() {
+        if(currentActiveView === 'view-customize-emoji') {
+            openManageBot(document.getElementById('manage-bot-name').innerText, document.getElementById('manage-bot-username').innerText);
+        } else if(currentActiveView === 'view-manage-overview') {
+            switchView('view-my-bots', document.getElementById('nav-my'));
+        }
+    }
+</script>
+</body>
+</html>
